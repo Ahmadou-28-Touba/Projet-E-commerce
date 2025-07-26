@@ -20,12 +20,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
 Route::get('/produits', [ProduitController::class, 'index'])->name('produits.index');
 
-
 Route::middleware(['auth', 'verified'])->group(function () {
-
 
     Route::get('/dashboard', function () {
         return view('dashboard');
@@ -34,7 +31,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
 
     Route::get('/listecategorie', [CategorieController::class, 'index'])->name('listecategorie');
     Route::get('/addcategorie', [CategorieController::class, 'create'])->name('addcategorie');
