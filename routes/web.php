@@ -54,7 +54,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     // Tableau de bord d'administration
     Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    
+
     // Routes admin (produits et catégories)
     Route::get('/produits', [ProduitController::class, 'index'])->name('produits.index');
     Route::get('/listecategorie', [CategorieController::class, 'index'])->name('listecategorie');
