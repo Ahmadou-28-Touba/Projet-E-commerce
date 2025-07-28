@@ -51,7 +51,8 @@ class CategorieController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $categorie = Categorie::findOrFail($id);
+        return view('editcategorie', compact('categorie'));
     }
 
     /**
@@ -59,7 +60,15 @@ class CategorieController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+           'nom' => 'required|min:3',
+        ]);
+        
+        $categorie = Categorie::findOrFail($id);
+        $categorie->nom = $request['nom'];
+        $categorie->save();
+        
+        return redirect('/listecategorie')->with('message', 'Catégorie modifiée avec succès !');
     }
 
     /**

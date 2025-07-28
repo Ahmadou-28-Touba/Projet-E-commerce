@@ -61,7 +61,7 @@ class ProduitController extends Controller
 
         $produit->save();
 
-        return redirect('/listeproduits')->with('message', 'Produit ajouté avec succès !');
+        return redirect('/produits')->with('message', 'Produit ajouté avec succès !');
     }
 
 
@@ -79,7 +79,9 @@ class ProduitController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $produit = Produit::findOrFail($id);
+        $categories = Categorie::all();
+        return view('editproduit', compact('produit', 'categories'));
     }
 
     /**
@@ -87,7 +89,32 @@ class ProduitController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'nom' => 'required',
+            'description' => 'required',
+            'prix' => 'required',
+            'stock' => 'required',
+            'categorie_id' => 'required',
+        ]);
+
+        $produit = Produit::findOrFail($id);
+        $produit->nom = $request['nom'];
+        $produit->description = $request['description'];
+        $produit->prix = $request['prix'];
+        $produit->stock = $request['stock'];
+        $produit->categorie_id = $request['categorie_id'];
+
+        // Gestion de l'upload image (optionnel lors de la modification)
+        if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('images/produits'), $filename);
+            $produit->image = $filename;
+        }
+
+        $produit->save();
+
+        return redirect('/produits')->with('message', 'Produit modifié avec succès !');
     }
 
     /**
@@ -96,6 +123,6 @@ class ProduitController extends Controller
     public function destroy(string $id)
     {
         Produit::destroy($id);
-        return redirect('/listeproduits')->with('message', 'Produit supprimé avec succès');
+        return redirect('/produits')->with('message', 'Produit supprimé avec succès');
     }
 }
