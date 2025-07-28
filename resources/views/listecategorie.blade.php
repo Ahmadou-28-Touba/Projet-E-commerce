@@ -24,7 +24,7 @@
                     <button class="btn btn-danger">Supprimer</button>
                 </form>
 
-                <button class="btn btn-primary">Modifier</button>
+                <a href="{{ route('editcategorie', $c->id) }}" class="btn btn-primary">Modifier</a>
             </td>
         </tr>
     @endforeach
