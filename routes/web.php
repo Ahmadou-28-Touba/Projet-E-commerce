@@ -70,6 +70,7 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::get('/admin/commandes/{id}', [CommandeController::class, 'adminShow'])->name('admin.commandes.show');
     Route::patch('/admin/commandes/{id}/statut', [CommandeController::class, 'updateStatut'])->name('admin.commandes.statut');
     Route::patch('/admin/commandes/{id}/paiement', [CommandeController::class, 'updatePaiement'])->name('admin.commandes.paiement');
+    Route::post('/admin/commandes/{id}/envoyer-email', [CommandeController::class, 'envoyerEmailConfirmation'])->name('admin.commandes.envoyer-email');
 });
 
 require __DIR__.'/auth.php';

@@ -169,9 +169,12 @@
                                     <a href="#" class="btn btn-primary">
                                         <i class="fas fa-download"></i> Télécharger la facture
                                     </a>
-                                    <a href="#" class="btn btn-info">
-                                        <i class="fas fa-envelope"></i> Envoyer un email
-                                    </a>
+                                    <form action="{{ route('admin.commandes.envoyer-email', $commande->id) }}" method="POST" style="display: inline;">
+                                        @csrf
+                                        <button type="submit" class="btn btn-info" onclick="return confirm('Êtes-vous sûr de vouloir envoyer un email de confirmation à {{ $commande->user->email }} ?')">
+                                            <i class="fas fa-envelope"></i> Envoyer un email
+                                        </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>

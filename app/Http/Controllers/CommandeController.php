@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Commande;
 use App\Models\Panier;
 use App\Models\Produit;
+use App\Mail\ConfirmationCommande;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class CommandeController extends Controller
 {
@@ -138,5 +140,31 @@ class CommandeController extends Controller
         ]);
 
         return back()->with('success', 'Statut de paiement mis à jour !');
+    }
+
+    /**
+     * Envoyer un email de confirmation de commande
+     */
+    public function envoyerEmailConfirmation($id)
+    {
+        $commande = Commande::with(['user', 'produits'])->findOrFail($id);
+        
+        try {
+            Mail::to($commande->user->email)->send(new ConfirmationCommande($commande));
+            
+            Log::info('Email de confirmation envoyé', [
+                'commande_id' => $id,
+                'user_email' => $commande->user->email
+            ]);
+            
+            return back()->with('success', 'Email de confirmation envoyé avec succès !');
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de l\'envoi de l\'email de confirmation', [
+                'commande_id' => $id,
+                'error' => $e->getMessage()
+            ]);
+            
+            return back()->with('error', 'Erreur lors de l\'envoi de l\'email. Veuillez réessayer.');
+        }
     }
 } 
