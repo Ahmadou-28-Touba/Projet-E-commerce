@@ -36,18 +36,22 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Routes du panier
-    Route::get('/panier', [PanierController::class, 'index'])->name('panier.index');
-    Route::post('/panier/add', [PanierController::class, 'add'])->name('panier.add');
-    Route::put('/panier/{id}', [PanierController::class, 'update'])->name('panier.update');
-    Route::delete('/panier/{id}', [PanierController::class, 'remove'])->name('panier.remove');
-    Route::delete('/panier', [PanierController::class, 'clear'])->name('panier.clear');
+    // Routes du panier (bloquées pour les admins)
+    Route::middleware(['block.admin.panier'])->group(function () {
+        Route::get('/panier', [PanierController::class, 'index'])->name('panier.index');
+        Route::post('/panier/add', [PanierController::class, 'add'])->name('panier.add');
+        Route::put('/panier/{id}', [PanierController::class, 'update'])->name('panier.update');
+        Route::delete('/panier/{id}', [PanierController::class, 'remove'])->name('panier.remove');
+        Route::delete('/panier', [PanierController::class, 'clear'])->name('panier.clear');
+    });
 
-    // Routes des commandes (client)
-    Route::get('/commandes', [CommandeController::class, 'index'])->name('commandes.index');
-    Route::get('/commandes/{id}', [CommandeController::class, 'show'])->name('commandes.show');
-    Route::get('/commande/create', [CommandeController::class, 'create'])->name('commandes.create');
-    Route::post('/commande/store', [CommandeController::class, 'store'])->name('commandes.store');
+    // Routes des commandes (client) - bloquées pour les admins
+    Route::middleware(['block.admin.panier'])->group(function () {
+        Route::get('/commandes', [CommandeController::class, 'index'])->name('commandes.index');
+        Route::get('/commandes/{id}', [CommandeController::class, 'show'])->name('commandes.show');
+        Route::get('/commande/create', [CommandeController::class, 'create'])->name('commandes.create');
+        Route::post('/commande/store', [CommandeController::class, 'store'])->name('commandes.store');
+    });
 });
 
 // Routes d'administration (protégées par le middleware admin)
